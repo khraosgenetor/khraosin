@@ -27,7 +27,6 @@ export default function EncryptionPage() {
 
   return (
     <main className={styles.main}>
-      <div className={styles.noise} />
 
       <div className={styles.wrapper}>
         <header className={styles.header}>
