@@ -6,9 +6,9 @@ function shiftMagnitude(key: number, seed: string, i: number): number {
   if (!seed) return key;
   const sc = seed[i];
   const lj = lc_alphabet.indexOf(sc);
-  if (lj !== -1) return key * lj;
+  if (lj !== -1) return key * (lj + 1);
   const uj = uc_alphabet.indexOf(sc);
-  if (uj !== -1) return key * uj;
+  if (uj !== -1) return key * (uj + 1);
   return key;
 }
 
@@ -49,7 +49,6 @@ function applyPass(message: string, key: number, seedChunk: string, encrypt: boo
 }
 
 function buildPasses(message: string, seed: string): string[] {
-  if (!seed) return [""];
   const len = message.length;
   const passes: string[] = [];
   for (let i = 0; i < seed.length; i += len) {
@@ -59,9 +58,9 @@ function buildPasses(message: string, seed: string): string[] {
 }
 
 export function encryptor(message: string, key: number, seed: string = ""): string {
+  if (!seed) return applyPass(message, key, "", true);
   const passes = buildPasses(message, seed);
   let result = message;
-
   for (const chunk of passes) {
     const partial = chunk.length < message.length;
     if (partial) {
@@ -71,14 +70,13 @@ export function encryptor(message: string, key: number, seed: string = ""): stri
       result = applyPass(result, key, chunk, true);
     }
   }
-
   return result;
 }
 
 export function decryptor(message: string, key: number, seed: string = ""): string {
+  if (!seed) return applyPass(message, key, "", false);
   const passes = buildPasses(message, seed);
   let result = message;
-
   for (let p = passes.length - 1; p >= 0; p--) {
     const chunk = passes[p];
     const partial = chunk.length < message.length;
@@ -89,6 +87,5 @@ export function decryptor(message: string, key: number, seed: string = ""): stri
       result = applyPass(result, key, chunk, false);
     }
   }
-
   return result;
 }

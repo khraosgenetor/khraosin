@@ -38,9 +38,9 @@ export default function EncryptionPage() {
   }, []);
 
   function handleRun() {
-    const k = parseInt(key);
+    const k = parseInt(key, 10);
+    const hasKey = key.trim() !== "" && !isNaN(k);    
     const hasSeed = seed.trim().length > 0;
-    const hasKey = !isNaN(k);
 
     if (!message.trim()) { setError("Message is required."); return; }
     if (!hasSeed && !hasKey) { setError("Enter a numeric key, a seed sentence, or both."); return; }
