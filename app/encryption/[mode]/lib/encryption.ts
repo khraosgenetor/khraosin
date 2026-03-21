@@ -6,9 +6,9 @@ function shiftMagnitude(key: number, seed: string, i: number): number {
   if (!seed) return key;
   const sc = seed[i];
   const lj = lc_alphabet.indexOf(sc);
-  if (lj !== -1) return key * (lj + 1);
+  if (lj !== -1) return (lj + 1) + key;
   const uj = uc_alphabet.indexOf(sc);
-  if (uj !== -1) return key * (uj + 1);
+  if (uj !== -1) return (uj + 1) + key;
   return key;
 }
 

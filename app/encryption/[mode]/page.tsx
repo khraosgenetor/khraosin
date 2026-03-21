@@ -46,7 +46,7 @@ export default function EncryptionPage() {
     if (!hasSeed && !hasKey) { setError("Enter a numeric key, a seed sentence, or both."); return; }
 
     setError("");
-    const effectiveKey = hasKey ? k : 1;
+    const effectiveKey = hasKey ? k : 0;
     const result = mode === "encrypt"
       ? encryptor(message, effectiveKey, seed.trim())
       : decryptor(message, effectiveKey, seed.trim());
