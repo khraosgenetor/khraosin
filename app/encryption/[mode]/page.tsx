@@ -15,15 +15,18 @@ export default function EncryptionPage() {
 
   const [message, setMessage] = useState(searchParams.get("m") ?? "");
   const [key, setKey] = useState(searchParams.get("k") ?? "");
+  const [seed, setSeed] = useState(searchParams.get("s") ?? "");
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
+  const [error, setError] = useState("");
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setOutput("");
+    setError("");
   }, [mode]);
 
   useEffect(() => {
@@ -36,8 +39,17 @@ export default function EncryptionPage() {
 
   function handleRun() {
     const k = parseInt(key);
-    if (!message.trim() || isNaN(k)) return;
-    const result = mode === "encrypt" ? encryptor(message, k) : decryptor(message, k);
+    const hasSeed = seed.trim().length > 0;
+    const hasKey = !isNaN(k);
+
+    if (!message.trim()) { setError("Message is required."); return; }
+    if (!hasSeed && !hasKey) { setError("Enter a numeric key, a seed sentence, or both."); return; }
+
+    setError("");
+    const effectiveKey = hasKey ? k : 1;
+    const result = mode === "encrypt"
+      ? encryptor(message, effectiveKey, seed.trim())
+      : decryptor(message, effectiveKey, seed.trim());
     setOutput(result);
     setCopied(false);
   }
@@ -51,7 +63,11 @@ export default function EncryptionPage() {
   function handleOpenShare() {
     const base = window.location.origin;
     const targetMode = mode === "encrypt" ? "1" : "2";
-    const url = `${base}/encryption/${targetMode}?m=${encodeURIComponent(message)}&k=${encodeURIComponent(key)}`;
+    const params = new URLSearchParams();
+    if (message) params.set("m", message);
+    if (key) params.set("k", key);
+    if (seed.trim()) params.set("s", seed.trim());
+    const url = `${base}/encryption/${targetMode}?${params.toString()}`;
     setShareUrl(url);
     setLinkCopied(false);
     setShowShare(true);
@@ -64,8 +80,7 @@ export default function EncryptionPage() {
   }
 
   function switchMode(m: "encrypt" | "decrypt") {
-    const target = m === "encrypt" ? "1" : "2";
-    router.push(`/encryption/${target}`);
+    router.push(`/encryption/${m === "encrypt" ? "1" : "2"}`);
   }
 
   function handleOverlayClick(e: React.MouseEvent<HTMLDivElement>) {
@@ -82,7 +97,7 @@ export default function EncryptionPage() {
             <span className={styles.titleAccent}>MACHINE</span>
           </h1>
           <p className={styles.desc}>
-            Alternating +/− key shifts per word. Odd positions add, even positions subtract.
+            Alternating +/− shifts per word position. Numeric key, seed sentence, or both.
             Wraps mod 26 for letters, mod 10 for digits.
           </p>
         </header>
@@ -114,16 +129,41 @@ export default function EncryptionPage() {
             />
           </div>
 
-          <div className={styles.field}>
-            <label className={styles.label}>KEY</label>
-            <input
-              className={styles.input}
-              type="number"
-              value={key}
-              onChange={e => setKey(e.target.value)}
-              placeholder="e.g. 7"
-            />
+          <div className={styles.row}>
+            <div className={styles.field}>
+              <label className={styles.label}>
+                NUMERIC KEY
+                <span className={styles.optBadge}>{seed.trim() ? "OPTIONAL" : "REQUIRED"}</span>
+              </label>
+              <input
+                className={styles.input}
+                type="number"
+                value={key}
+                onChange={e => setKey(e.target.value)}
+                placeholder="e.g. 7"
+              />
+            </div>
           </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>
+              SEED SENTENCE
+              <span className={styles.optBadge}>{key.trim() ? "OPTIONAL" : "REQUIRED"}</span>
+            </label>
+            <textarea
+              className={`${styles.textarea} ${styles.seedArea}`}
+              value={seed}
+              onChange={e => setSeed(e.target.value)}
+              placeholder="e.g. All Roads lead to Rome"
+              rows={2}
+            />
+            <span className={styles.hint}>
+              Each character's alphabet index is multiplied by the numeric key to produce the shift magnitude.
+              Seed wraps if shorter than message.
+            </span>
+          </div>
+
+          {error && <p className={styles.error}>{error}</p>}
 
           <div className={styles.btnRow}>
             <button className={styles.runBtn} onClick={handleRun}>
@@ -179,9 +219,18 @@ export default function EncryptionPage() {
               </div>
 
               <div className={styles.modalField}>
-                <span className={styles.label}>KEY</span>
+                <span className={styles.label}>NUMERIC KEY</span>
                 <span className={styles.modalValue}>
-                  {key.trim() ? key : <span className={styles.modalEmpty}>— empty —</span>}
+                  {key.trim() ? key : <span className={styles.modalEmpty}>— not set —</span>}
+                </span>
+              </div>
+
+              <div className={styles.modalField}>
+                <span className={styles.label}>SEED SENTENCE</span>
+                <span className={styles.modalValue}>
+                  {seed.trim()
+                    ? seed.length > 40 ? seed.slice(0, 40) + "…" : seed
+                    : <span className={styles.modalEmpty}>— not set —</span>}
                 </span>
               </div>
 
