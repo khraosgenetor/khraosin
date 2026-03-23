@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
-import { encryptor, decryptor } from "./lib/encryption";
+import { encryptor, decryptor } from "@khraosgenetor/encryption";
 import styles from "./page.module.css";
 
 export default function EncryptionPage() {
