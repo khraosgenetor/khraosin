@@ -834,10 +834,10 @@ function ProjectsFolder() {
 function Dock() {
   const { openApp, openWindows, activeWorkspace } = useDesktop();
 
-  const apps = [
-    { id: "terminal" as AppId, icon: ">_", label: "Terminal", color: "var(--green)" },
-    { id: "about" as AppId, icon: "i", label: "About", color: "var(--blue)" },
-    { id: "projects" as AppId, icon: "", label: "Projects", color: "var(--mauve)" },
+const apps = [
+  { id: "terminal" as AppId, icon: ">_", label: "Terminal", color: "var(--green)" },
+  { id: "about" as AppId, icon: "i", label: "About", color: "var(--blue)" },
+  { id: "projects" as AppId, icon: "\u21BB", label: "Projects", color: "var(--mauve)" },
   ];
 
   return (
