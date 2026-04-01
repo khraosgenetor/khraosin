@@ -1,35 +1,124 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Windows 2000 Color Palette */
+  --background: #008080;          /* Classic Win2K teal desktop */
+  --foreground: #000000;
+  --win-gray: #D4D0C8;            /* Classic Win2K silver/gray */
+  --win-white: #FFFFFF;
+  --win-dark: #808080;
+  --win-darker: #404040;
+  --win-titlebar: #0A246A;        /* Deep blue title bar */
+  --win-titlebar-inactive: #7A96DF;
+  --win-titlebar-text: #FFFFFF;
+  --win-highlight: #FFFFFF;       /* Bevel highlight (top-left) */
+  --win-shadow: #808080;          /* Bevel shadow (bottom-right) */
+  --win-deep-shadow: #404040;     /* Outer bevel shadow */
+  --win-selected: #0A246A;        /* Selected item blue */
+  --win-selected-text: #FFFFFF;
+  --win-link: #0000FF;
+  --win-terminal-bg: #000000;
+  --win-terminal-text: #C0C0C0;
+  --win-terminal-green: #00FF00;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-jetbrains-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-}
-.cursor {
-  animation: blink 1s step-end infinite;
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-jetbrains-mono), monospace;
+  font-family: var(--font-jetbrains-mono), 'Courier New', monospace;
+  font-size: 11px;
+  cursor: default;
+  user-select: none;
+}
+
+/* Windows 2000 Classic Bevel Styles */
+.win-raised {
+  border: 2px solid;
+  border-color: var(--win-highlight) var(--win-deep-shadow) var(--win-deep-shadow) var(--win-highlight);
+  background: var(--win-gray);
+}
+
+.win-raised-inner {
+  border: 1px solid;
+  border-color: var(--win-gray) var(--win-shadow) var(--win-shadow) var(--win-gray);
+}
+
+.win-sunken {
+  border: 2px solid;
+  border-color: var(--win-shadow) var(--win-highlight) var(--win-highlight) var(--win-shadow);
+  background: var(--win-white);
+}
+
+.win-sunken-panel {
+  border: 2px solid;
+  border-color: var(--win-shadow) var(--win-highlight) var(--win-highlight) var(--win-shadow);
+}
+
+.win-button {
+  background: var(--win-gray);
+  border: 2px solid;
+  border-color: var(--win-highlight) var(--win-deep-shadow) var(--win-deep-shadow) var(--win-highlight);
+  padding: 2px 8px;
+  font-family: var(--font-jetbrains-mono), 'Courier New', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  min-width: 24px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.win-button:active {
+  border-color: var(--win-deep-shadow) var(--win-highlight) var(--win-highlight) var(--win-deep-shadow);
+  padding: 3px 7px 1px 9px;
+}
+
+.win-input {
+  background: var(--win-white);
+  border: 2px solid;
+  border-color: var(--win-shadow) var(--win-highlight) var(--win-highlight) var(--win-shadow);
+  font-family: var(--font-jetbrains-mono), 'Courier New', monospace;
+  font-size: 11px;
+  padding: 2px 4px;
+  outline: none;
+  color: var(--foreground);
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+.cursor {
+  animation: blink 1s step-end infinite;
+}
+
+/* Desktop tiling pattern */
+.desktop-bg {
+  background-color: var(--background);
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
 }

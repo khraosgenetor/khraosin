@@ -9,8 +9,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Khraos",
-  description: "Cybersecurity and OSDev",
+  title: "Khraos — Cybersecurity & OSDev",
+  description: "Khraos: Hyderabad-based hacker into CyberSec and OSDev. C, x86 Assembly, Rust, Linux.",
 };
 
 export default function RootLayout({
@@ -20,11 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${jetbrainsMono.variable} antialiased`}
-      >
+      <body className={`${jetbrainsMono.variable}`}>
         <Nav />
-        <main>
+        <main style={{ height: "100vh", overflow: "hidden" }}>
           {children}
         </main>
       </body>

@@ -1,5 +1,5 @@
-import Terminal from "./components/Terminal"
+import Win2KDesktop from "./components/Win2KDesktop";
 
 export default function Home() {
-  return <Terminal />
+  return <Win2KDesktop />;
 }
