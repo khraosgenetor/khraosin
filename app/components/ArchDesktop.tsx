@@ -11,22 +11,25 @@ interface Line {
 /* ─── Neofetch Banner ─────────────────────────────── */
 function NeofetchOutput() {
   const info = [
-    ["OS",      "Arch Linux x86_64"],
-    ["Host",    "khraos.in"],
-    ["Kernel",  "6.13.7-arch1-1"],
-    ["Shell",   "fish 3.7.1 + starship"],
-    ["WM",      "Hyprland"],
-    ["Theme",   "Catppuccin Mocha"],
-    ["Font",    "JetBrains Mono"],
-    ["Learning","K&R C, x86 Assembly"],
-    ["Projects","neolithic-age, khraos.in"],
+    ["OS", "Arch Linux x86_64"],
+    ["Host", "khraos.in"],
+    ["Kernel", "6.13.7-arch1-1"],
+    ["Shell", "fish 3.7.1 + starship"],
+    ["WM", "Hyprland"],
+    ["Theme", "Catppuccin Mocha"],
+    ["Font", "JetBrains Mono"],
+    ["Learning", "K&R C, x86 Assembly"],
+    ["Projects", "neolithic-age, khraos.in"],
   ];
 
   return (
     <div className="flex gap-6 my-1">
       {/* ASCII art */}
-      <pre className="text-xs leading-tight flex-shrink-0" style={{ color: "var(--blue)" }}>
-{`      /\\
+      <pre
+        className="text-xs leading-tight flex-shrink-0"
+        style={{ color: "var(--blue)" }}
+      >
+        {`      /\\
      /  \\
     /\\   \\
    /  __  \\
@@ -36,23 +39,59 @@ function NeofetchOutput() {
       </pre>
       {/* Info */}
       <div className="flex flex-col gap-0.5 text-xs font-mono">
-        <div style={{ color: "var(--mauve)", fontWeight: 700 }}>khraos@archlinux</div>
+        <div style={{ color: "var(--mauve)", fontWeight: 700 }}>
+          khraos@archlinux
+        </div>
         <div style={{ color: "var(--surface2)" }}>──────────────────</div>
         {info.map(([k, v]) => (
           <div key={k} className="flex gap-1">
-            <span style={{ color: "var(--lavender)", minWidth: "72px" }}>{k}</span>
+            <span style={{ color: "var(--lavender)", minWidth: "72px" }}>
+              {k}
+            </span>
             <span style={{ color: "var(--overlay0)" }}>~</span>
             <span style={{ color: "var(--text)" }}>{v}</span>
           </div>
         ))}
         <div className="flex gap-1 mt-2">
-          {["--crust","--mantle","--base","--surface0","--surface1","--surface2"].map((c) => (
-            <div key={c} style={{ width: 14, height: 14, borderRadius: 2, background: `var(${c})`, border: "1px solid rgba(255,255,255,0.1)" }} />
+          {[
+            "--crust",
+            "--mantle",
+            "--base",
+            "--surface0",
+            "--surface1",
+            "--surface2",
+          ].map((c) => (
+            <div
+              key={c}
+              style={{
+                width: 14,
+                height: 14,
+                borderRadius: 2,
+                background: `var(${c})`,
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}
+            />
           ))}
         </div>
         <div className="flex gap-1">
-          {["--red","--peach","--yellow","--green","--teal","--blue","--mauve"].map((c) => (
-            <div key={c} style={{ width: 14, height: 14, borderRadius: 2, background: `var(${c})` }} />
+          {[
+            "--red",
+            "--peach",
+            "--yellow",
+            "--green",
+            "--teal",
+            "--blue",
+            "--mauve",
+          ].map((c) => (
+            <div
+              key={c}
+              style={{
+                width: 14,
+                height: 14,
+                borderRadius: 2,
+                background: `var(${c})`,
+              }}
+            />
           ))}
         </div>
       </div>
@@ -82,19 +121,23 @@ const COMMANDS: Record<string, () => Line[]> = {
     {
       content: (
         <div className="flex flex-col gap-0.5 text-xs my-1">
-          <div style={{ color: "var(--mauve)", fontWeight: 600 }}>Available commands</div>
+          <div style={{ color: "var(--mauve)", fontWeight: 600 }}>
+            Available commands
+          </div>
           {[
-            ["whoami",   "about me"],
-            ["skills",   "tech stack"],
+            ["whoami", "about me"],
+            ["skills", "tech stack"],
             ["projects", "my projects"],
-            ["contact",  "reach out"],
-            ["pwd",      "current directory"],
+            ["contact", "reach out"],
+            ["pwd", "current directory"],
             ["uname -a", "system info"],
-            ["ls",       "list directory"],
-            ["clear",    "clear terminal"],
+            ["ls", "list directory"],
+            ["clear", "clear terminal"],
           ].map(([cmd, desc]) => (
             <div key={cmd} className="flex gap-3 pl-2">
-              <span style={{ color: "var(--green)", minWidth: "80px" }}>{cmd}</span>
+              <span style={{ color: "var(--green)", minWidth: "80px" }}>
+                {cmd}
+              </span>
               <span style={{ color: "var(--overlay1)" }}>{desc}</span>
             </div>
           ))}
@@ -106,10 +149,22 @@ const COMMANDS: Record<string, () => Line[]> = {
     {
       content: (
         <div className="flex flex-col gap-1 text-xs my-1 pl-2">
-          <div><span style={{ color: "var(--lavender)" }}>name  </span><span style={{ color: "var(--text)" }}>Khraos</span></div>
-          <div><span style={{ color: "var(--lavender)" }}>loc   </span><span style={{ color: "var(--text)" }}>Hyderabad, India</span></div>
-          <div><span style={{ color: "var(--lavender)" }}>focus </span><span style={{ color: "var(--text)" }}>CyberSec &amp; OSDev</span></div>
-          <div><span style={{ color: "var(--lavender)" }}>status</span><span style={{ color: "var(--green)" }}> hacking...</span></div>
+          <div>
+            <span style={{ color: "var(--lavender)" }}>name </span>
+            <span style={{ color: "var(--text)" }}>Khraos</span>
+          </div>
+          <div>
+            <span style={{ color: "var(--lavender)" }}>loc </span>
+            <span style={{ color: "var(--text)" }}>Hyderabad, India</span>
+          </div>
+          <div>
+            <span style={{ color: "var(--lavender)" }}>focus </span>
+            <span style={{ color: "var(--text)" }}>CyberSec &amp; OSDev</span>
+          </div>
+          <div>
+            <span style={{ color: "var(--lavender)" }}>status</span>
+            <span style={{ color: "var(--green)" }}> hacking...</span>
+          </div>
         </div>
       ),
     },
@@ -119,14 +174,16 @@ const COMMANDS: Record<string, () => Line[]> = {
       content: (
         <div className="flex flex-col gap-1 text-xs my-1 pl-2">
           {[
-            ["Systems",  "C, x86 Assembly, Rust"],
-            ["OOP",      "Java, C++"],
-            ["Web",      "Next.js, TypeScript"],
-            ["OS",       "Linux, Arch, NixOS"],
+            ["Systems", "C, x86 Assembly, Rust"],
+            ["OOP", "Java, C++"],
+            ["Web", "Next.js, TypeScript"],
+            ["OS", "Linux, Arch, NixOS"],
             ["Security", "CyberSec, Reverse Engineering"],
           ].map(([cat, val]) => (
             <div key={cat} className="flex gap-3">
-              <span style={{ color: "var(--blue)", minWidth: "72px" }}>{cat}</span>
+              <span style={{ color: "var(--blue)", minWidth: "72px" }}>
+                {cat}
+              </span>
               <span style={{ color: "var(--text)" }}>{val}</span>
             </div>
           ))}
@@ -139,12 +196,20 @@ const COMMANDS: Record<string, () => Line[]> = {
       content: (
         <div className="flex flex-col gap-2 text-xs my-1 pl-2">
           <div>
-            <div style={{ color: "var(--mauve)", fontWeight: 600 }}>neolithic-age</div>
-            <div style={{ color: "var(--subtext0)" }}>Minecraft Forge mod — Java</div>
+            <div style={{ color: "var(--mauve)", fontWeight: 600 }}>
+              neolithic-age
+            </div>
+            <div style={{ color: "var(--subtext0)" }}>
+              Minecraft Forge mod — Java
+            </div>
           </div>
           <div>
-            <div style={{ color: "var(--mauve)", fontWeight: 600 }}>khraos.in</div>
-            <div style={{ color: "var(--subtext0)" }}>Self-hosted home server — Linux</div>
+            <div style={{ color: "var(--mauve)", fontWeight: 600 }}>
+              khraos.in
+            </div>
+            <div style={{ color: "var(--subtext0)" }}>
+              Self-hosted home server — Linux
+            </div>
           </div>
         </div>
       ),
@@ -154,14 +219,27 @@ const COMMANDS: Record<string, () => Line[]> = {
     {
       content: (
         <div className="flex flex-col gap-1 text-xs my-1 pl-2">
-          <div><span style={{ color: "var(--lavender)" }}>email   </span><span style={{ color: "var(--text)" }}>khraos@khraos.in</span></div>
-          <div><span style={{ color: "var(--lavender)" }}>github  </span><span style={{ color: "var(--blue)" }}>github.com/khraosgenetor</span></div>
-          <div><span style={{ color: "var(--lavender)" }}>site    </span><span style={{ color: "var(--blue)" }}>khraos.in</span></div>
+          <div>
+            <span style={{ color: "var(--lavender)" }}>email </span>
+            <span style={{ color: "var(--text)" }}>khraos@khraos.in</span>
+          </div>
+          <div>
+            <span style={{ color: "var(--lavender)" }}>github </span>
+            <span style={{ color: "var(--blue)" }}>
+              github.com/khraosgenetor
+            </span>
+          </div>
+          <div>
+            <span style={{ color: "var(--lavender)" }}>site </span>
+            <span style={{ color: "var(--blue)" }}>khraos.in</span>
+          </div>
         </div>
       ),
     },
   ],
-  pwd: () => [{ content: <span className="text-xs term-output pl-2">/home/khraos</span> }],
+  pwd: () => [
+    { content: <span className="text-xs term-output pl-2">/home/khraos</span> },
+  ],
   "uname -a": () => [
     {
       content: (
@@ -177,12 +255,14 @@ const COMMANDS: Record<string, () => Line[]> = {
         <div className="flex gap-4 text-xs my-1 pl-2 flex-wrap">
           {[
             { name: "projects/", color: "var(--blue)" },
-            { name: "scripts/",  color: "var(--blue)" },
-            { name: ".config/",  color: "var(--blue)" },
+            { name: "scripts/", color: "var(--blue)" },
+            { name: ".config/", color: "var(--blue)" },
             { name: "README.md", color: "var(--text)" },
-            { name: ".dotfiles/",color: "var(--blue)" },
+            { name: ".dotfiles/", color: "var(--blue)" },
           ].map(({ name, color }) => (
-            <span key={name} style={{ color }}>{name}</span>
+            <span key={name} style={{ color }}>
+              {name}
+            </span>
           ))}
         </div>
       ),
@@ -246,10 +326,15 @@ function KittyTerminal({
     (e: React.MouseEvent) => {
       if (maximized) return;
       dragging.current = true;
-      dragStart.current = { mx: e.clientX, my: e.clientY, wx: pos.x, wy: pos.y };
+      dragStart.current = {
+        mx: e.clientX,
+        my: e.clientY,
+        wx: pos.x,
+        wy: pos.y,
+      };
       e.preventDefault();
     },
-    [maximized, pos]
+    [maximized, pos],
   );
 
   useEffect(() => {
@@ -260,7 +345,9 @@ function KittyTerminal({
         y: dragStart.current.wy + e.clientY - dragStart.current.my,
       });
     };
-    const onUp = () => { dragging.current = false; };
+    const onUp = () => {
+      dragging.current = false;
+    };
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseup", onUp);
     return () => {
@@ -317,7 +404,7 @@ function KittyTerminal({
       e.preventDefault();
       const next = Math.max(histIdx - 1, -1);
       setHistIdx(next);
-      setInput(next === -1 ? "" : cmdHistory[next] ?? "");
+      setInput(next === -1 ? "" : (cmdHistory[next] ?? ""));
     }
   };
 
@@ -329,8 +416,23 @@ function KittyTerminal({
   if (!initialized) return null;
 
   const windowStyle = maximized
-    ? { position: "fixed" as const, top: "40px", left: 0, right: 0, bottom: 0, width: "auto", height: "auto", borderRadius: 0 }
-    : { position: "fixed" as const, left: pos.x, top: pos.y, width: 760, height: 480 };
+    ? {
+        position: "fixed" as const,
+        top: "40px",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: "auto",
+        height: "auto",
+        borderRadius: 0,
+      }
+    : {
+        position: "fixed" as const,
+        left: pos.x,
+        top: pos.y,
+        width: 760,
+        height: 480,
+      };
 
   return (
     <div
@@ -346,9 +448,24 @@ function KittyTerminal({
       >
         {/* Window controls (left, macOS style) */}
         <div className="flex items-center gap-2">
-          <button className="wctl-btn wctl-close" onClick={onClose} title="Close" aria-label="Close" />
-          <button className="wctl-btn wctl-min"   onClick={onMinimize} title="Minimize" aria-label="Minimize" />
-          <button className="wctl-btn wctl-max"   onClick={toggleMaximize} title="Maximize" aria-label="Maximize" />
+          <button
+            className="wctl-btn wctl-close"
+            onClick={onClose}
+            title="Close"
+            aria-label="Close"
+          />
+          <button
+            className="wctl-btn wctl-min"
+            onClick={onMinimize}
+            title="Minimize"
+            aria-label="Minimize"
+          />
+          <button
+            className="wctl-btn wctl-max"
+            onClick={toggleMaximize}
+            title="Maximize"
+            aria-label="Maximize"
+          />
         </div>
 
         {/* Title */}
@@ -360,7 +477,12 @@ function KittyTerminal({
         </span>
 
         {/* Right: shell indicator */}
-        <span className="text-xs font-mono" style={{ color: "var(--overlay1)" }}>fish</span>
+        <span
+          className="text-xs font-mono"
+          style={{ color: "var(--overlay1)" }}
+        >
+          fish
+        </span>
       </div>
 
       {/* Terminal body */}
@@ -385,12 +507,18 @@ function KittyTerminal({
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             className="flex-1 bg-transparent outline-none text-xs font-mono"
-            style={{ color: "var(--text)", caretColor: "var(--mauve)", minWidth: 0 }}
+            style={{
+              color: "var(--text)",
+              caretColor: "var(--mauve)",
+              minWidth: 0,
+            }}
             spellCheck={false}
             autoComplete="off"
             aria-label="Terminal input"
           />
-          <span className="cursor text-xs" style={{ color: "var(--mauve)" }}>|</span>
+          <span className="cursor text-xs" style={{ color: "var(--mauve)" }}>
+            |
+          </span>
         </div>
         <div ref={bottomRef} />
       </div>
@@ -436,26 +564,46 @@ function AboutWidget() {
         style={{ borderBottom: "1px solid var(--glass-border)" }}
       >
         <div className="wctl-btn wctl-close" style={{ cursor: "default" }} />
-        <div className="wctl-btn wctl-min"   style={{ cursor: "default" }} />
-        <div className="wctl-btn wctl-max"   style={{ cursor: "default" }} />
-        <span className="text-xs ml-2" style={{ color: "var(--subtext0)" }}>~/about.md</span>
+        <div className="wctl-btn wctl-min" style={{ cursor: "default" }} />
+        <div className="wctl-btn wctl-max" style={{ cursor: "default" }} />
+        <span className="text-xs ml-2" style={{ color: "var(--subtext0)" }}>
+          ~/about.md
+        </span>
       </div>
       <div className="flex flex-col gap-1.5">
-        <div style={{ color: "var(--mauve)", fontWeight: 700, fontSize: "13px" }}>Khraos</div>
-        <div style={{ color: "var(--subtext0)", fontSize: "11px" }}>Hyderabad, India</div>
-        <div style={{ height: "1px", background: "var(--surface0)", margin: "4px 0" }} />
+        <div
+          style={{ color: "var(--mauve)", fontWeight: 700, fontSize: "13px" }}
+        >
+          Khraos
+        </div>
+        <div style={{ color: "var(--subtext0)", fontSize: "11px" }}>
+          Hyderabad, India
+        </div>
+        <div
+          style={{
+            height: "1px",
+            background: "var(--surface0)",
+            margin: "4px 0",
+          }}
+        />
         {[
-          ["focus",   "CyberSec + OSDev"],
-          ["wm",      "Hyprland"],
-          ["editor",  "neovim"],
-          ["shell",   "fish + starship"],
+          ["focus", "CyberSec + OSDev"],
+          ["wm", "Hyprland"],
+          ["editor", "neovim"],
+          ["shell", "fish + starship"],
         ].map(([k, v]) => (
           <div key={k} className="flex gap-2 text-xs">
             <span style={{ color: "var(--blue)", minWidth: "52px" }}>{k}</span>
             <span style={{ color: "var(--text)" }}>{v}</span>
           </div>
         ))}
-        <div style={{ height: "1px", background: "var(--surface0)", margin: "4px 0" }} />
+        <div
+          style={{
+            height: "1px",
+            background: "var(--surface0)",
+            margin: "4px 0",
+          }}
+        />
         <a
           href="https://github.com/khraosgenetor"
           target="_blank"
@@ -484,7 +632,8 @@ export default function HyprlandDesktop() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: "radial-gradient(circle, rgba(180,190,254,0.04) 1px, transparent 1px)",
+          backgroundImage:
+            "radial-gradient(circle, rgba(180,190,254,0.04) 1px, transparent 1px)",
           backgroundSize: "32px 32px",
         }}
       />
@@ -508,15 +657,33 @@ export default function HyprlandDesktop() {
           style={{ paddingTop: "40px" }}
         >
           <div
-            className="glass-window px-6 py-4 text-center text-sm pointer-events-auto cursor-pointer"
-            style={{ color: "var(--subtext0)" }}
-            onClick={() => { setTermOpen(true); setMinimized(false); }}
+            className="glass-window px-6 py-4 text-center pointer-events-auto cursor-pointer"
+            style={{
+              color: "var(--subtext0)",
+              fontSize: "13px",
+              lineHeight: "18px",
+              WebkitFontSmoothing: "antialiased",
+              MozOsxFontSmoothing: "grayscale",
+              textRendering: "geometricPrecision",
+            }}
+            onClick={() => {
+              setTermOpen(true);
+              setMinimized(false);
+            }}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => e.key === "Enter" && setTermOpen(true)}
             aria-label="Reopen terminal"
           >
-            <div style={{ color: "var(--mauve)", fontSize: "20px", marginBottom: "8px" }}>&#9723;</div>
+            <div
+              style={{
+                color: "var(--mauve)",
+                fontSize: "20px",
+                marginBottom: "8px",
+              }}
+            >
+              &#8635;
+            </div>
             <div>click to reopen terminal</div>
           </div>
         </div>
