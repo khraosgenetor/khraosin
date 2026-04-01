@@ -1,40 +1,55 @@
 @import "tailwindcss";
 
 :root {
-  /* Windows 2000 Color Palette */
-  --background: #008080;          /* Classic Win2K teal desktop */
-  --foreground: #000000;
-  --win-gray: #D4D0C8;            /* Classic Win2K silver/gray */
-  --win-white: #FFFFFF;
-  --win-dark: #808080;
-  --win-darker: #404040;
-  --win-titlebar: #0A246A;        /* Deep blue title bar */
-  --win-titlebar-inactive: #7A96DF;
-  --win-titlebar-text: #FFFFFF;
-  --win-highlight: #FFFFFF;       /* Bevel highlight (top-left) */
-  --win-shadow: #808080;          /* Bevel shadow (bottom-right) */
-  --win-deep-shadow: #404040;     /* Outer bevel shadow */
-  --win-selected: #0A246A;        /* Selected item blue */
-  --win-selected-text: #FFFFFF;
-  --win-link: #0000FF;
-  --win-terminal-bg: #000000;
-  --win-terminal-text: #C0C0C0;
-  --win-terminal-green: #00FF00;
+  /* Catppuccin Mocha palette */
+  --crust:    #11111b;
+  --mantle:   #181825;
+  --base:     #1e1e2e;
+  --surface0: #313244;
+  --surface1: #45475a;
+  --surface2: #585b70;
+  --overlay0: #6c7086;
+  --overlay1: #7f849c;
+  --text:     #cdd6f4;
+  --subtext0: #a6adc8;
+  --subtext1: #bac2de;
+  --lavender: #b4befe;
+  --mauve:    #cba6f7;
+  --pink:     #f5c2e7;
+  --red:      #f38ba8;
+  --peach:    #fab387;
+  --yellow:   #f9e2af;
+  --green:    #a6e3a1;
+  --teal:     #94e2d5;
+  --sky:      #89dceb;
+  --sapphire: #74c7ec;
+  --blue:     #89b4fa;
+
+  /* Semantic tokens */
+  --background:   var(--base);
+  --foreground:   var(--text);
+  --accent:       var(--mauve);
+  --accent-alt:   var(--blue);
+  --glass-bg:     rgba(30, 30, 46, 0.75);
+  --glass-border: rgba(180, 190, 254, 0.12);
+  --glass-hover:  rgba(49, 50, 68, 0.85);
+  --radius:       0.75rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-mono: var(--font-jetbrains-mono);
+  --font-sans: var(--font-jetbrains-mono);
 }
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -43,82 +58,108 @@ html, body {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-jetbrains-mono), 'Courier New', monospace;
-  font-size: 11px;
-  cursor: default;
-  user-select: none;
+  font-family: var(--font-jetbrains-mono), 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Windows 2000 Classic Bevel Styles */
-.win-raised {
-  border: 2px solid;
-  border-color: var(--win-highlight) var(--win-deep-shadow) var(--win-deep-shadow) var(--win-highlight);
-  background: var(--win-gray);
+/* Wallpaper gradient background */
+.hypr-wallpaper {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(203, 166, 247, 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(137, 180, 250, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 80%, rgba(148, 226, 213, 0.05) 0%, transparent 40%),
+    linear-gradient(135deg, #11111b 0%, #1e1e2e 50%, #181825 100%);
 }
 
-.win-raised-inner {
-  border: 1px solid;
-  border-color: var(--win-gray) var(--win-shadow) var(--win-shadow) var(--win-gray);
+/* Glassmorphism window */
+.glass-window {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.5),
+    0 2px 0 rgba(180, 190, 254, 0.08) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.3) inset;
 }
 
-.win-sunken {
-  border: 2px solid;
-  border-color: var(--win-shadow) var(--win-highlight) var(--win-highlight) var(--win-shadow);
-  background: var(--win-white);
+/* Title bar for glass windows */
+.glass-titlebar {
+  background: rgba(49, 50, 68, 0.6);
+  border-bottom: 1px solid var(--glass-border);
+  border-radius: var(--radius) var(--radius) 0 0;
 }
 
-.win-sunken-panel {
-  border: 2px solid;
-  border-color: var(--win-shadow) var(--win-highlight) var(--win-highlight) var(--win-shadow);
-}
-
-.win-button {
-  background: var(--win-gray);
-  border: 2px solid;
-  border-color: var(--win-highlight) var(--win-deep-shadow) var(--win-deep-shadow) var(--win-highlight);
-  padding: 2px 8px;
-  font-family: var(--font-jetbrains-mono), 'Courier New', monospace;
-  font-size: 11px;
-  cursor: pointer;
-  min-width: 24px;
-  height: 22px;
+/* Waybar pill */
+.waybar-pill {
+  background: rgba(24, 24, 37, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 9999px;
+  padding: 2px 12px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
+  height: 28px;
+  font-size: 12px;
+  color: var(--subtext1);
 }
 
-.win-button:active {
-  border-color: var(--win-deep-shadow) var(--win-highlight) var(--win-highlight) var(--win-deep-shadow);
-  padding: 3px 7px 1px 9px;
+/* Window control buttons */
+.wctl-btn {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: filter 0.15s;
 }
+.wctl-btn:hover { filter: brightness(1.3); }
+.wctl-close   { background: #f38ba8; }
+.wctl-min     { background: #f9e2af; }
+.wctl-max     { background: #a6e3a1; }
 
-.win-input {
-  background: var(--win-white);
-  border: 2px solid;
-  border-color: var(--win-shadow) var(--win-highlight) var(--win-highlight) var(--win-shadow);
-  font-family: var(--font-jetbrains-mono), 'Courier New', monospace;
-  font-size: 11px;
-  padding: 2px 4px;
-  outline: none;
-  color: var(--foreground);
-}
+/* Terminal text */
+.term-prompt-user   { color: var(--green); }
+.term-prompt-host   { color: var(--blue); }
+.term-prompt-path   { color: var(--mauve); }
+.term-prompt-arrow  { color: var(--mauve); }
+.term-output        { color: var(--subtext1); }
+.term-comment       { color: var(--overlay1); }
+.term-accent        { color: var(--blue); }
+.term-key           { color: var(--lavender); }
+.term-val           { color: var(--peach); }
+.term-success       { color: var(--green); }
+.term-error         { color: var(--red); }
+.term-yellow        { color: var(--yellow); }
 
-@keyframes blink {
-  50% { opacity: 0; }
-}
-.cursor {
-  animation: blink 1s step-end infinite;
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface1); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--surface2); }
 
-/* Desktop tiling pattern */
-.desktop-bg {
-  background-color: var(--background);
-  background-image: 
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.03) 2px,
-      rgba(0,0,0,0.03) 4px
-    );
+/* Blinking cursor */
+@keyframes blink { 50% { opacity: 0; } }
+.cursor { animation: blink 1s step-end infinite; }
+
+/* Workspace dot */
+.ws-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--surface1);
+  transition: all 0.2s;
+}
+.ws-dot.active {
+  width: 22px;
+  background: var(--mauve);
+}
+.ws-dot.occupied {
+  background: var(--overlay1);
 }

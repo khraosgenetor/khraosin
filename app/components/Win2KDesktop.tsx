@@ -1,111 +1,242 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import Link from "next/link";
 
 /* ─── Types ─────────────────────────────── */
 interface Line {
-  text: string;
-  color?: string;
+  content: React.ReactNode;
+  raw?: string;
 }
 
-interface DesktopIcon {
-  id: string;
-  label: string;
-  icon: string;
-  href?: string;
-  onDoubleClick?: () => void;
+/* ─── Neofetch Banner ─────────────────────────────── */
+function NeofetchOutput() {
+  const info = [
+    ["OS",      "Arch Linux x86_64"],
+    ["Host",    "khraos.in"],
+    ["Kernel",  "6.13.7-arch1-1"],
+    ["Shell",   "fish 3.7.1 + starship"],
+    ["WM",      "Hyprland"],
+    ["Theme",   "Catppuccin Mocha"],
+    ["Font",    "JetBrains Mono"],
+    ["Learning","K&R C, x86 Assembly"],
+    ["Projects","neolithic-age, khraos.in"],
+  ];
+
+  return (
+    <div className="flex gap-6 my-1">
+      {/* ASCII art */}
+      <pre className="text-xs leading-tight flex-shrink-0" style={{ color: "var(--blue)" }}>
+{`      /\\
+     /  \\
+    /\\   \\
+   /  __  \\
+  /  (  )  \\
+ / __|  |__\\\\
+/.\'        \'.`}
+      </pre>
+      {/* Info */}
+      <div className="flex flex-col gap-0.5 text-xs font-mono">
+        <div style={{ color: "var(--mauve)", fontWeight: 700 }}>khraos@archlinux</div>
+        <div style={{ color: "var(--surface2)" }}>──────────────────</div>
+        {info.map(([k, v]) => (
+          <div key={k} className="flex gap-1">
+            <span style={{ color: "var(--lavender)", minWidth: "72px" }}>{k}</span>
+            <span style={{ color: "var(--overlay0)" }}>~</span>
+            <span style={{ color: "var(--text)" }}>{v}</span>
+          </div>
+        ))}
+        <div className="flex gap-1 mt-2">
+          {["--crust","--mantle","--base","--surface0","--surface1","--surface2"].map((c) => (
+            <div key={c} style={{ width: 14, height: 14, borderRadius: 2, background: `var(${c})`, border: "1px solid rgba(255,255,255,0.1)" }} />
+          ))}
+        </div>
+        <div className="flex gap-1">
+          {["--red","--peach","--yellow","--green","--teal","--blue","--mauve"].map((c) => (
+            <div key={c} style={{ width: 14, height: 14, borderRadius: 2, background: `var(${c})` }} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
-/* ─── Banner ─────────────────────────────── */
+/* ─── BANNER lines ─────────────────────────────── */
 const BANNER: Line[] = [
-  { text: "Microsoft Windows 2000 [Version 5.00.2195]", color: "text-gray-300" },
-  { text: "(C) Copyright 1985-2000 Microsoft Corp.", color: "text-gray-300" },
-  { text: "", color: "" },
-  { text: "C:\\Users\\khraos> neofetch", color: "text-gray-200" },
-  { text: "", color: "" },
-  { text: "  _  ___                            _____                 _             ", color: "text-green-400 text-xs" },
-  { text: " | |/ / |                          / ____|               | |            ", color: "text-green-400 text-xs" },
-  { text: " | ' /| |__  _ __ __ _  ___  ___  | |  __  ___ _ __   ___| |_ ___  _ __", color: "text-green-400 text-xs" },
-  { text: " |  < | '_ \\| '__/ _` |/ _ \\/ __| | | |_ |/ _ \\ '_ \\ / _ \\ __/ _ \\| '__|", color: "text-green-400 text-xs" },
-  { text: " | . \\| | | | | | (_| | (_) \\__ \\ | |__| |  __/ | | |  __/ || (_) | |", color: "text-green-400 text-xs" },
-  { text: " |_|\\_\\_| |_|_|  \\__,_|\\___/|___/  \\_____|\\___/|_| |_|\\___|\\____/|_|", color: "text-green-400 text-xs" },
-  { text: "", color: "" },
-  { text: "  user      khraos", color: "text-gray-300" },
-  { text: "  host      khraos.in", color: "text-gray-300" },
-  { text: "  os        Arch Linux", color: "text-gray-300" },
-  { text: "  shell     fish + starship", color: "text-gray-300" },
-  { text: "  wm        Hyprland", color: "text-gray-300" },
-  { text: "  learning  K&R C, x86 Assembly", color: "text-gray-300" },
-  { text: "  projects  neolithic-age, khraos.in", color: "text-gray-300" },
-  { text: "", color: "" },
-  { text: "  type 'help' for available commands.", color: "text-gray-500" },
-  { text: "", color: "" },
+  {
+    content: <NeofetchOutput />,
+    raw: "neofetch",
+  },
+  {
+    content: (
+      <span className="term-comment text-xs">
+        # type &apos;help&apos; for available commands
+      </span>
+    ),
+  },
+  { content: <span></span> },
 ];
 
 /* ─── Commands ───────────────────────────── */
 const COMMANDS: Record<string, () => Line[]> = {
   help: () => [
-    { text: "Available commands:", color: "text-yellow-300" },
-    { text: "  whoami    — about me", color: "text-gray-300" },
-    { text: "  skills    — my tech skills", color: "text-gray-300" },
-    { text: "  projects  — my projects", color: "text-gray-300" },
-    { text: "  contact   — contact info", color: "text-gray-300" },
-    { text: "  pwd       — current directory", color: "text-gray-300" },
-    { text: "  uname -a  — system info", color: "text-gray-300" },
-    { text: "  cls       — clear screen", color: "text-gray-300" },
-    { text: "", color: "" },
+    {
+      content: (
+        <div className="flex flex-col gap-0.5 text-xs my-1">
+          <div style={{ color: "var(--mauve)", fontWeight: 600 }}>Available commands</div>
+          {[
+            ["whoami",   "about me"],
+            ["skills",   "tech stack"],
+            ["projects", "my projects"],
+            ["contact",  "reach out"],
+            ["pwd",      "current directory"],
+            ["uname -a", "system info"],
+            ["ls",       "list directory"],
+            ["clear",    "clear terminal"],
+          ].map(([cmd, desc]) => (
+            <div key={cmd} className="flex gap-3 pl-2">
+              <span style={{ color: "var(--green)", minWidth: "80px" }}>{cmd}</span>
+              <span style={{ color: "var(--overlay1)" }}>{desc}</span>
+            </div>
+          ))}
+        </div>
+      ),
+    },
   ],
   whoami: () => [
-    { text: "Khraos", color: "text-white" },
-    { text: "Hyderabad, India", color: "text-gray-300" },
-    { text: "Into CyberSec and OSDev.", color: "text-gray-300" },
-    { text: "", color: "" },
+    {
+      content: (
+        <div className="flex flex-col gap-1 text-xs my-1 pl-2">
+          <div><span style={{ color: "var(--lavender)" }}>name  </span><span style={{ color: "var(--text)" }}>Khraos</span></div>
+          <div><span style={{ color: "var(--lavender)" }}>loc   </span><span style={{ color: "var(--text)" }}>Hyderabad, India</span></div>
+          <div><span style={{ color: "var(--lavender)" }}>focus </span><span style={{ color: "var(--text)" }}>CyberSec &amp; OSDev</span></div>
+          <div><span style={{ color: "var(--lavender)" }}>status</span><span style={{ color: "var(--green)" }}> hacking...</span></div>
+        </div>
+      ),
+    },
   ],
   skills: () => [
-    { text: "C, x86 Assembly, Java, C++, Rust, Linux, Next.js", color: "text-gray-300" },
-    { text: "", color: "" },
+    {
+      content: (
+        <div className="flex flex-col gap-1 text-xs my-1 pl-2">
+          {[
+            ["Systems",  "C, x86 Assembly, Rust"],
+            ["OOP",      "Java, C++"],
+            ["Web",      "Next.js, TypeScript"],
+            ["OS",       "Linux, Arch, NixOS"],
+            ["Security", "CyberSec, Reverse Engineering"],
+          ].map(([cat, val]) => (
+            <div key={cat} className="flex gap-3">
+              <span style={{ color: "var(--blue)", minWidth: "72px" }}>{cat}</span>
+              <span style={{ color: "var(--text)" }}>{val}</span>
+            </div>
+          ))}
+        </div>
+      ),
+    },
   ],
   projects: () => [
-    { text: "neolithic-age — Minecraft Forge mod (Java)", color: "text-gray-300" },
-    { text: "khraos.in     — self-hosted home server (Linux)", color: "text-gray-300" },
-    { text: "", color: "" },
+    {
+      content: (
+        <div className="flex flex-col gap-2 text-xs my-1 pl-2">
+          <div>
+            <div style={{ color: "var(--mauve)", fontWeight: 600 }}>neolithic-age</div>
+            <div style={{ color: "var(--subtext0)" }}>Minecraft Forge mod — Java</div>
+          </div>
+          <div>
+            <div style={{ color: "var(--mauve)", fontWeight: 600 }}>khraos.in</div>
+            <div style={{ color: "var(--subtext0)" }}>Self-hosted home server — Linux</div>
+          </div>
+        </div>
+      ),
+    },
   ],
   contact: () => [
-    { text: "email:  khraos@khraos.in", color: "text-gray-300" },
-    { text: "github: github.com/khraosgenetor", color: "text-gray-300" },
-    { text: "", color: "" },
+    {
+      content: (
+        <div className="flex flex-col gap-1 text-xs my-1 pl-2">
+          <div><span style={{ color: "var(--lavender)" }}>email   </span><span style={{ color: "var(--text)" }}>khraos@khraos.in</span></div>
+          <div><span style={{ color: "var(--lavender)" }}>github  </span><span style={{ color: "var(--blue)" }}>github.com/khraosgenetor</span></div>
+          <div><span style={{ color: "var(--lavender)" }}>site    </span><span style={{ color: "var(--blue)" }}>khraos.in</span></div>
+        </div>
+      ),
+    },
   ],
-  pwd: () => [
-    { text: "C:\\Users\\khraos", color: "text-gray-300" },
-    { text: "", color: "" },
-  ],
+  pwd: () => [{ content: <span className="text-xs term-output pl-2">/home/khraos</span> }],
   "uname -a": () => [
-    { text: "Linux khraos 6.x.0 #1 SMP x86_64 GNU/Linux", color: "text-gray-300" },
-    { text: "", color: "" },
+    {
+      content: (
+        <span className="text-xs term-output pl-2">
+          Linux archlinux 6.13.7-arch1-1 #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux
+        </span>
+      ),
+    },
+  ],
+  ls: () => [
+    {
+      content: (
+        <div className="flex gap-4 text-xs my-1 pl-2 flex-wrap">
+          {[
+            { name: "projects/", color: "var(--blue)" },
+            { name: "scripts/",  color: "var(--blue)" },
+            { name: ".config/",  color: "var(--blue)" },
+            { name: "README.md", color: "var(--text)" },
+            { name: ".dotfiles/",color: "var(--blue)" },
+          ].map(({ name, color }) => (
+            <span key={name} style={{ color }}>{name}</span>
+          ))}
+        </div>
+      ),
+    },
   ],
 };
 
-/* ─── Win2K Terminal Window ──────────────── */
-function TerminalWindow({
-  onMinimize,
+/* ─── Prompt Line ─────────────────────────── */
+function PromptLine({ cmd }: { cmd: string }) {
+  return (
+    <div className="flex items-center gap-0 text-xs leading-6 font-mono">
+      <span className="term-prompt-user">khraos</span>
+      <span style={{ color: "var(--overlay1)" }}>@</span>
+      <span className="term-prompt-host">archlinux</span>
+      <span style={{ color: "var(--overlay1)" }}>:</span>
+      <span className="term-prompt-path">~</span>
+      <span style={{ color: "var(--overlay1)" }}> </span>
+      <span className="term-prompt-arrow">&#10095;</span>
+      <span style={{ color: "var(--overlay0)" }}>&nbsp;</span>
+      <span style={{ color: "var(--text)" }}>{cmd}</span>
+    </div>
+  );
+}
+
+/* ─── Terminal Window ──────────────────────── */
+function KittyTerminal({
   onClose,
+  onMinimize,
+  onMaximize,
 }: {
-  onMinimize: () => void;
   onClose: () => void;
+  onMinimize: () => void;
+  onMaximize: () => void;
 }) {
   const [lines, setLines] = useState<Line[]>([...BANNER]);
   const [input, setInput] = useState("");
-  const [history, setHistory] = useState<string[]>([]);
-  const [historyIdx, setHistoryIdx] = useState(-1);
+  const [cmdHistory, setCmdHistory] = useState<string[]>([]);
+  const [histIdx, setHistIdx] = useState(-1);
   const [maximized, setMaximized] = useState(false);
-  const [pos, setPos] = useState({ x: 80, y: 40 });
-  const [size] = useState({ w: 720, h: 440 });
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [initialized, setInitialized] = useState(false);
 
   const dragging = useRef(false);
   const dragStart = useRef({ mx: 0, my: 0, wx: 0, wy: 0 });
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Center window on mount
+  useEffect(() => {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    setPos({ x: Math.max(0, (w - 760) / 2), y: Math.max(40, (h - 480) / 2) });
+    setInitialized(true);
+  }, []);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -140,28 +271,32 @@ function TerminalWindow({
 
   const runCommand = (raw: string) => {
     const cmd = raw.trim().toLowerCase();
-    const echo: Line = { text: `C:\\Users\\khraos> ${raw}`, color: "text-gray-200" };
+    const promptLine: Line = { content: <PromptLine cmd={raw} />, raw };
 
     if (!cmd) {
-      setLines((l) => [...l, echo, { text: "", color: "" }]);
+      setLines((l) => [...l, promptLine]);
       return;
     }
 
-    if (cmd === "cls" || cmd === "clear") {
-      setLines([{ text: "C:\\Users\\khraos> cls", color: "text-gray-200" }, { text: "", color: "" }]);
+    if (cmd === "clear" || cmd === "cls") {
+      setLines([]);
       return;
     }
 
-    const result = COMMANDS[cmd];
-    if (result) {
-      setLines((l) => [...l, echo, ...result()]);
+    const handler = COMMANDS[cmd];
+    if (handler) {
+      setLines((l) => [...l, promptLine, ...handler()]);
     } else {
       setLines((l) => [
         ...l,
-        echo,
-        { text: `'${raw}' is not recognized as an internal or external command.`, color: "text-red-400" },
-        { text: "Type 'help' for available commands.", color: "text-gray-500" },
-        { text: "", color: "" },
+        promptLine,
+        {
+          content: (
+            <span className="term-error text-xs pl-2">
+              bash: {raw}: command not found
+            </span>
+          ),
+        },
       ]);
     }
   };
@@ -169,280 +304,220 @@ function TerminalWindow({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const val = input;
-      setHistory((h) => [val, ...h]);
-      setHistoryIdx(-1);
+      setCmdHistory((h) => [val, ...h]);
+      setHistIdx(-1);
       runCommand(val);
       setInput("");
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      const next = Math.min(historyIdx + 1, history.length - 1);
-      setHistoryIdx(next);
-      setInput(history[next] ?? "");
+      const next = Math.min(histIdx + 1, cmdHistory.length - 1);
+      setHistIdx(next);
+      setInput(cmdHistory[next] ?? "");
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
-      const next = Math.max(historyIdx - 1, -1);
-      setHistoryIdx(next);
-      setInput(next === -1 ? "" : history[next] ?? "");
+      const next = Math.max(histIdx - 1, -1);
+      setHistIdx(next);
+      setInput(next === -1 ? "" : cmdHistory[next] ?? "");
     }
   };
 
-  const style = maximized
-    ? { position: "fixed" as const, inset: "0 0 38px 0", width: "auto", height: "auto" }
-    : {
-        position: "fixed" as const,
-        left: pos.x,
-        top: pos.y,
-        width: size.w,
-        height: size.h,
-      };
+  const toggleMaximize = () => {
+    setMaximized((v) => !v);
+    onMaximize();
+  };
+
+  if (!initialized) return null;
+
+  const windowStyle = maximized
+    ? { position: "fixed" as const, top: "40px", left: 0, right: 0, bottom: 0, width: "auto", height: "auto", borderRadius: 0 }
+    : { position: "fixed" as const, left: pos.x, top: pos.y, width: 760, height: 480 };
 
   return (
     <div
-      className="win-raised flex flex-col z-20"
-      style={{ ...style, fontFamily: "var(--font-jetbrains-mono), 'Courier New', monospace" }}
+      className="glass-window flex flex-col z-20 overflow-hidden"
+      style={windowStyle}
     >
-      {/* Title Bar */}
+      {/* Title bar */}
       <div
-        className="flex items-center justify-between px-1 flex-shrink-0"
-        style={{
-          height: "22px",
-          background: "linear-gradient(to right, #0A246A, #3A6EA5)",
-          cursor: maximized ? "default" : "move",
-        }}
+        className="glass-titlebar flex items-center justify-between px-3 flex-shrink-0"
+        style={{ height: "36px", cursor: maximized ? "default" : "move" }}
         onMouseDown={handleMouseDown}
-        onDoubleClick={() => setMaximized((v) => !v)}
+        onDoubleClick={toggleMaximize}
       >
-        <div className="flex items-center gap-1">
-          <span style={{ fontSize: "12px" }}>💻</span>
-          <span
-            style={{
-              color: "#FFFFFF",
-              fontSize: "11px",
-              fontWeight: "bold",
-              fontFamily: "inherit",
-              textShadow: "1px 1px 0 #000",
-            }}
-          >
-            Command Prompt — C:\Users\khraos
-          </span>
+        {/* Window controls (left, macOS style) */}
+        <div className="flex items-center gap-2">
+          <button className="wctl-btn wctl-close" onClick={onClose} title="Close" aria-label="Close" />
+          <button className="wctl-btn wctl-min"   onClick={onMinimize} title="Minimize" aria-label="Minimize" />
+          <button className="wctl-btn wctl-max"   onClick={toggleMaximize} title="Maximize" aria-label="Maximize" />
         </div>
-        <div className="flex items-center gap-px">
-          {/* Minimize */}
-          <button
-            className="win-button"
-            style={{ width: "16px", height: "14px", padding: 0, fontSize: "10px" }}
-            onClick={onMinimize}
-            title="Minimize"
-          >
-            _
-          </button>
-          {/* Maximize */}
-          <button
-            className="win-button"
-            style={{ width: "16px", height: "14px", padding: 0, fontSize: "9px" }}
-            onClick={() => setMaximized((v) => !v)}
-            title={maximized ? "Restore" : "Maximize"}
-          >
-            {maximized ? "❐" : "□"}
-          </button>
-          {/* Close */}
-          <button
-            className="win-button"
-            style={{ width: "16px", height: "14px", padding: 0, fontSize: "10px", fontWeight: "bold" }}
-            onClick={onClose}
-            title="Close"
-          >
-            ✕
-          </button>
-        </div>
+
+        {/* Title */}
+        <span
+          className="absolute left-1/2 -translate-x-1/2 text-xs font-mono select-none"
+          style={{ color: "var(--subtext0)" }}
+        >
+          kitty — khraos@archlinux: ~
+        </span>
+
+        {/* Right: shell indicator */}
+        <span className="text-xs font-mono" style={{ color: "var(--overlay1)" }}>fish</span>
       </div>
 
-      {/* Menu Bar */}
+      {/* Terminal body */}
       <div
-        className="flex items-center gap-4 px-2 flex-shrink-0"
-        style={{
-          height: "20px",
-          background: "var(--win-gray)",
-          borderBottom: "1px solid var(--win-shadow)",
-          fontSize: "11px",
-        }}
-      >
-        {["File", "Edit", "View", "Help"].map((item) => (
-          <span
-            key={item}
-            className="cursor-pointer hover:bg-[var(--win-selected)] hover:text-[var(--win-selected-text)] px-1"
-            style={{ color: "var(--foreground)" }}
-          >
-            {item}
-          </span>
-        ))}
-      </div>
-
-      {/* Terminal Body */}
-      <div
-        className="flex-1 overflow-y-auto p-2"
-        style={{ background: "#000000" }}
+        className="flex-1 overflow-y-auto p-4 font-mono"
+        style={{ background: "rgba(17, 17, 27, 0.95)", fontSize: "12px" }}
         onClick={() => inputRef.current?.focus()}
       >
         {lines.map((line, i) => (
-          <div key={i} className={`leading-tight whitespace-pre text-xs font-mono ${line.color ?? "text-gray-300"}`}>
-            {line.text || "\u00A0"}
+          <div key={i} className="leading-6">
+            {line.content}
           </div>
         ))}
 
-        {/* Input Line */}
-        <div className="flex items-center text-xs font-mono">
-          <span className="text-gray-200 whitespace-pre">{"C:\\Users\\khraos> "}</span>
+        {/* Active input line */}
+        <div className="flex items-center gap-0 leading-6">
+          <PromptLine cmd="" />
           <input
             ref={inputRef}
             autoFocus
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="flex-1 bg-transparent outline-none text-gray-200 text-xs font-mono caret-gray-200"
+            className="flex-1 bg-transparent outline-none text-xs font-mono"
+            style={{ color: "var(--text)", caretColor: "var(--mauve)", minWidth: 0 }}
             spellCheck={false}
             autoComplete="off"
             aria-label="Terminal input"
-            style={{ caretColor: "#C0C0C0" }}
           />
-          <span className="text-gray-200 cursor">▋</span>
+          <span className="cursor text-xs" style={{ color: "var(--mauve)" }}>|</span>
         </div>
         <div ref={bottomRef} />
       </div>
 
-      {/* Status Bar */}
+      {/* Status bar */}
       <div
-        className="flex items-center px-2 gap-2 flex-shrink-0"
+        className="flex items-center justify-between px-4 flex-shrink-0"
         style={{
-          height: "18px",
-          background: "var(--win-gray)",
-          borderTop: "1px solid var(--win-shadow)",
+          height: "22px",
+          background: "rgba(17, 17, 27, 0.9)",
+          borderTop: "1px solid var(--glass-border)",
+          fontSize: "11px",
         }}
       >
-        <div className="win-sunken-panel px-2 flex-1 text-xs" style={{ height: "14px", lineHeight: "14px" }}>
-          Ready
+        <div className="flex items-center gap-3">
+          <span style={{ color: "var(--green)" }}> NORMAL</span>
+          <span style={{ color: "var(--overlay1)" }}>fish 3.7.1</span>
         </div>
-        <div className="win-sunken-panel px-2 text-xs" style={{ height: "14px", lineHeight: "14px" }}>
-          khraos.in
+        <div className="flex items-center gap-3">
+          <span style={{ color: "var(--overlay1)" }}>utf-8</span>
+          <span style={{ color: "var(--lavender)" }}>khraos.in</span>
         </div>
       </div>
     </div>
   );
 }
 
-/* ─── Desktop Icon ───────────────────────── */
-function DesktopIcon({ icon }: { icon: DesktopIcon }) {
-  const [selected, setSelected] = useState(false);
-
-  const handleClick = () => setSelected((v) => !v);
-  const handleDoubleClick = () => {
-    if (icon.onDoubleClick) icon.onDoubleClick();
-    if (icon.href) window.open(icon.href, "_blank");
-  };
-
+/* ─── About / Neofetch floating widget ─── */
+function AboutWidget() {
   return (
     <div
-      className="flex flex-col items-center gap-1 p-1 cursor-pointer w-20"
-      onClick={handleClick}
-      onDoubleClick={handleDoubleClick}
-      title={icon.label}
+      className="glass-window absolute font-mono"
+      style={{
+        top: "60px",
+        right: "24px",
+        width: "280px",
+        padding: "16px",
+        fontSize: "12px",
+      }}
     >
       <div
-        className="flex items-center justify-center text-3xl"
-        style={{
-          filter: selected ? "brightness(0.5) sepia(1) saturate(3) hue-rotate(190deg)" : "none",
-        }}
+        className="flex items-center gap-2 mb-3 pb-2"
+        style={{ borderBottom: "1px solid var(--glass-border)" }}
       >
-        {icon.icon}
+        <div className="wctl-btn wctl-close" style={{ cursor: "default" }} />
+        <div className="wctl-btn wctl-min"   style={{ cursor: "default" }} />
+        <div className="wctl-btn wctl-max"   style={{ cursor: "default" }} />
+        <span className="text-xs ml-2" style={{ color: "var(--subtext0)" }}>~/about.md</span>
       </div>
-      <span
-        className="text-center text-xs leading-tight px-1"
-        style={{
-          color: "#FFFFFF",
-          textShadow: "1px 1px 2px #000000",
-          background: selected ? "var(--win-selected)" : "transparent",
-          maxWidth: "72px",
-          wordBreak: "break-word",
-        }}
-      >
-        {icon.label}
-      </span>
+      <div className="flex flex-col gap-1.5">
+        <div style={{ color: "var(--mauve)", fontWeight: 700, fontSize: "13px" }}>Khraos</div>
+        <div style={{ color: "var(--subtext0)", fontSize: "11px" }}>Hyderabad, India</div>
+        <div style={{ height: "1px", background: "var(--surface0)", margin: "4px 0" }} />
+        {[
+          ["focus",   "CyberSec + OSDev"],
+          ["wm",      "Hyprland"],
+          ["editor",  "neovim"],
+          ["shell",   "fish + starship"],
+        ].map(([k, v]) => (
+          <div key={k} className="flex gap-2 text-xs">
+            <span style={{ color: "var(--blue)", minWidth: "52px" }}>{k}</span>
+            <span style={{ color: "var(--text)" }}>{v}</span>
+          </div>
+        ))}
+        <div style={{ height: "1px", background: "var(--surface0)", margin: "4px 0" }} />
+        <a
+          href="https://github.com/khraosgenetor"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs"
+          style={{ color: "var(--lavender)" }}
+        >
+          github.com/khraosgenetor &#8599;
+        </a>
+      </div>
     </div>
   );
 }
 
 /* ─── Main Desktop ───────────────────────── */
-export default function Win2KDesktop() {
-  const [terminalOpen, setTerminalOpen] = useState(true);
+export default function HyprlandDesktop() {
+  const [termOpen, setTermOpen] = useState(true);
   const [minimized, setMinimized] = useState(false);
-
-  const desktopIcons: DesktopIcon[] = [
-    {
-      id: "terminal",
-      label: "Command Prompt",
-      icon: "💻",
-      onDoubleClick: () => {
-        setTerminalOpen(true);
-        setMinimized(false);
-      },
-    },
-    {
-      id: "projects",
-      label: "My Projects",
-      icon: "📁",
-      href: "/projects",
-    },
-    {
-      id: "about",
-      label: "About",
-      icon: "📄",
-      href: "/about",
-    },
-    {
-      id: "github",
-      label: "GitHub",
-      icon: "🐙",
-      href: "https://github.com/khraosgenetor",
-    },
-    {
-      id: "recycle",
-      label: "Recycle Bin",
-      icon: "🗑️",
-    },
-  ];
 
   return (
     <div
-      className="desktop-bg fixed inset-0"
-      style={{ bottom: "38px" }}
+      className="hypr-wallpaper fixed inset-0 font-mono"
+      style={{ paddingTop: "40px" }}
     >
-      {/* Desktop Icons — left column */}
-      <div className="absolute top-4 left-4 flex flex-col gap-2">
-        {desktopIcons.map((icon) => (
-          <DesktopIcon key={icon.id} icon={icon} />
-        ))}
-      </div>
+      {/* Background dot grid */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: "radial-gradient(circle, rgba(180,190,254,0.04) 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+        }}
+      />
 
-      {/* Terminal Window */}
-      {terminalOpen && !minimized && (
-        <TerminalWindow
+      {/* About widget — always visible */}
+      <AboutWidget />
+
+      {/* Terminal */}
+      {termOpen && !minimized && (
+        <KittyTerminal
+          onClose={() => setTermOpen(false)}
           onMinimize={() => setMinimized(true)}
-          onClose={() => setTerminalOpen(false)}
+          onMaximize={() => {}}
         />
       )}
 
-      {/* Restore if minimized / closed */}
-      {(!terminalOpen || minimized) && (
+      {/* Restore hint */}
+      {(!termOpen || minimized) && (
         <div
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ pointerEvents: "none" }}
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          style={{ paddingTop: "40px" }}
         >
           <div
-            className="text-center"
-            style={{ color: "rgba(255,255,255,0.3)", pointerEvents: "none" }}
+            className="glass-window px-6 py-4 text-center text-sm pointer-events-auto cursor-pointer"
+            style={{ color: "var(--subtext0)" }}
+            onClick={() => { setTermOpen(true); setMinimized(false); }}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && setTermOpen(true)}
+            aria-label="Reopen terminal"
           >
-            <div style={{ fontSize: "48px" }}>💻</div>
-            <div className="text-xs mt-1">Double-click icon to reopen terminal</div>
+            <div style={{ color: "var(--mauve)", fontSize: "20px", marginBottom: "8px" }}>&#9723;</div>
+            <div>click to reopen terminal</div>
           </div>
         </div>
       )}
