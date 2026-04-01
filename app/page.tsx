@@ -1,5 +1,5 @@
-import Terminal from "./components/Terminal"
+import HyprlandDesktop from "./components/ArchDesktop";
 
 export default function Home() {
-  return <Terminal />
+  return <HyprlandDesktop />;
 }
