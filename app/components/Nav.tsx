@@ -30,23 +30,6 @@ function Clock() {
   );
 }
 
-function Workspaces() {
-  const [active] = useState(1);
-  const occupied = [1, 2];
-
-  return (
-    <div className="waybar-pill gap-2">
-      {[1, 2, 3, 4, 5].map((ws) => (
-        <div
-          key={ws}
-          className={`ws-dot ${ws === active ? "active" : occupied.includes(ws) ? "occupied" : ""}`}
-          title={`Workspace ${ws}`}
-        />
-      ))}
-    </div>
-  );
-}
-
 function SysTray() {
   return (
     <div className="waybar-pill gap-3">
@@ -58,7 +41,13 @@ function SysTray() {
   );
 }
 
-export default function Nav() {
+interface NavProps {
+  activeTitle: string;
+  activeWorkspace: number;
+  onWorkspaceChange: (ws: number) => void;
+}
+
+export default function Nav({ activeTitle, activeWorkspace, onWorkspaceChange }: NavProps) {
   return (
     <nav
       className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-3"
@@ -67,7 +56,17 @@ export default function Nav() {
     >
       {/* Left: Workspaces + launcher */}
       <div className="flex items-center gap-2">
-        <Workspaces />
+        <div className="waybar-pill gap-2">
+          {[1, 2, 3, 4, 5].map((ws) => (
+            <button
+              key={ws}
+              className={`ws-dot ${ws === activeWorkspace ? "active" : ""}`}
+              title={`Workspace ${ws}`}
+              onClick={() => onWorkspaceChange(ws)}
+              aria-label={`Switch to workspace ${ws}`}
+            />
+          ))}
+        </div>
         <div className="waybar-pill" style={{ color: "var(--mauve)", fontWeight: 600, fontSize: "12px" }}>
           khraos@archlinux
         </div>
@@ -76,7 +75,7 @@ export default function Nav() {
       {/* Center: Active window title */}
       <div className="waybar-pill" style={{ fontSize: "12px", color: "var(--subtext1)" }}>
         <span style={{ color: "var(--lavender)" }}></span>
-        <span>kitty — khraos@archlinux:~</span>
+        <span>{activeTitle}</span>
       </div>
 
       {/* Right: Sys tray + clock */}
